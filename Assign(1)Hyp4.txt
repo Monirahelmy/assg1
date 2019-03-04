@@ -1,43 +1,3 @@
-data=xlsread('heart_DD.csv')
-m=length(data(:,1));
-m80=ceil(m*0.8);
-m10=ceil(m*0.1);
-x=data{1:m80,1:13};
-X=[ones(m80,1) x x.^10];
-
-
-Y=data{1:m80,14};
-y=data{1:m80,14};
-Alpha=0.01;
-lambda=100;
-
-
-%80% 
- n=length(X(1,:)); 
- for w=2:n
-    if max(abs(X(:,w)))~=0
-    X(:,w)=(X(:,w)-mean((X(:,w))))./std(X(:,w));
-    end
- end
- theta=zeros(n,1);
- h=1./(1+exp(-X*theta));  
- k=1;
- J(k)=-(1/m80)*sum(Y.*log(h)+(1-Y).*log(1-h))+(lambda/(2*m80))*sum((theta).^2);  %cost function
- grad=zeros(size(theta,1),1);     %gradient vector
- for i=1:size(grad)
-     grad(i)=(1/m80)*sum((h-Y)'*X(:,i));
- end
-R=1;
-while R==1
-Alpha=Alpha*1;
-theta=theta-(Alpha/m80)*X'*(h-Y);
-h=1./(1+exp(-X*theta));  %sigmoid function
-k=k+1
-J(k)=(-1/m80)*sum(Y.*log(h)+(1-Y).*log(1-h))+(lambda/(2*m80))*sum((theta).^2);
-if J(k-1)-J(k) <0 
-    break
-end 
-q=(J(k-1)-J(k))./J(k-1);
 clc
 clear all
 clear all
@@ -58,7 +18,7 @@ U3=data(1:m60, 8);
 U= U1.^2 
 
 
-X=[ones(m60,1) U1 U1.^10];
+X=[ones(m60,1) U1 U1.^5];
 
 n=length(X(1,:));
 for w=2:n
@@ -94,7 +54,7 @@ U1_20=data(m60+1:m60+m20,8);
 U2_20=data(m60+1:m60+m20,4:19);
 U3_20=data(m60+1:m60+m20,20:21);
 
-X_20=[ones(m20,1) U1_20  U1_20 .^ 2 ];
+X_20=[ones(m20,1) U1_20  U1_20 .^ 5 ];
 
 Theta_20=Theta;
 Y_20=data(m60+1:m60+m20,3)/mean(data(m60+1:m60+m20,3));
@@ -116,9 +76,9 @@ p40=m-(m60+m20);
 u1_40=data(m40:end,4);
 u2_40=data(m40:end,5:19);
 u3_40=data(m40:end,20:21);
-U4= 
 
-x_40=[ones(p40,1) u1_40 u1_40.^3];
+
+x_40=[ones(p40,1) u1_40 u1_40.^5];
 
 Theta_40=Theta_20;
 y_40=data{m40:end,3}/mean(data{m40:end,3});
